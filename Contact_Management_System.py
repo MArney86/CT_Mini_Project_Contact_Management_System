@@ -9,12 +9,24 @@ def add_contact(contact_list):
     while True:
         if choice == 'y':
             additional_info = get_contact_additional()
+            break
         elif choice == 'n':
+            additional_info = ""
             break
         else:
             print("That was not a y or n, please try again")
     
+    if name.find(' ') == -1:
+        unique_id = phone[-4:] + name
+    else:
+        name_space = name.find(' ')
+        unique_id = phone[-4:] + name[:name_space]
 
+    if unique_id not in contact_list.keys():
+        contact_list[phone] = {'name': name, 'phone': phone, 'email': email, 'additional': additional_info}
+    else:
+        print("There's already a contact with that unique identifier")
+    
 def edit_contact(contact_list):
     pass
 
@@ -35,7 +47,7 @@ def import_contacts(contact_list):
 
 def validate_email(email):
     validation = r'^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}$'
-    if re.match(validation, email)
+    if re.match(validation, email):
         return True
     else:
         try:
@@ -48,76 +60,87 @@ def validate_email(email):
                     if len(split_domain[0]) <= 63 and re.match(valid_domain, split_domain[0]): #check for valid domain name
                         valid_top_domain = '[A-Z|a-z]{2,}$'
                         if not re.match(valid_top_domain,split_domain[1]): #check that the top level domain is not valid
-                            return "Invalid email address: email adresses must have a valid top level domain" #return that the top level domain is invalid
+                            print("Invalid email address: email adresses must have a valid top level domain") #return that the top level domain is invalid
+                            return False
                         else:
-                            return"Invalid email address: unknown email error" 
+                            print("Invalid email address: unknown email error")
+                            return False
                     else: #invalid domain label
-                        return "Invalid email address: email addresses must have a domain with a label of no more than 63 alphanumeric characters containing only alphanumeric character and . or -" #return the minimum requirements for email domain
+                        print("Invalid email address: email addresses must have a domain with a label of no more than 63 alphanumeric characters containing only alphanumeric character and . or -") #return the minimum requirements for email domain
+                        return False
                 else: #invalid identifier
-                    return "Invalid email address: email addresses must have an identifier that contains alphanumeric characters and ._%+\-" #return the minimum requirements for the identifier part of the email address
+                    print("Invalid email address: email addresses must have an identifier that contains alphanumeric characters and ._%+\-") #return the minimum requirements for the identifier part of the email address
+                    return False
             else: #no @ symbol
-                return "Invalid email address: email addresses must contain the @ symbol" #returns that the email address must contain an @ symbol
+                print("Invalid email address: email addresses must contain the @ symbol") #returns that the email address must contain an @ symbol
+                return False
         except Exception:
             print("There was an error validating the email")
 
 def validate_name(name):
-    pass
+    try:
+        valid_name = r"[a-zA-Z]{2,}"
+        valid_fullname = r"[a-zA-Z'-]{2,}+\s+[a-zA-Z'-]{2,}"
+        if re.match(valid_name, name) or re.match(valid_fullname, name):
+            return True
+        else:
+            return False
+    except Exception:
+        print("There was an unexpected error validating the name")
+
 
 def validate_phone(phone):
-    pass
+    try:
+        valid_phone = r'[0-9]{3}+-+[0-9]{3}+-+[0-9]{4}'
+        if re.match(valid_phone, phone):
+            return True
+        else:
+            return False
+    except Exception:
+        print("There was an error validating the phone number")
 
 def get_contact_name():
     while True:
-        try:
-            name = input("What is the contact's name?: ")
+            name = input("What is the contact's name?: ").strip()
             valid_name = validate_name(name)
-            if valid_name is bool:
-                if valid_name:
-                    break
-                else:
-                    raise ValueError
+            if valid_name:
+                break
             else:
-                if valid_name is str:
-                    print(valid_name)
-                else:
-                    raise ValueError
-    
-        except ValueError:
-            print("The input caused an unexpected error, please try again")
-    
+                print("The name input did not meet minimum requirements. Please try again.")
     return name
         
 
 def get_contact_phone():
     while True:
-        try:
-            phone = input("What is the contact's phone number?: ")
+            phone = input("What is the contact's phone number (xxx-xxx-xxxx)?: ").strip()
             valid_phone = validate_phone(phone)
-            if valid_phone is bool:
-                if valid_phone:
-                    break
-                else:
-                    raise ValueError
+            if valid_phone:
+                break
             else:
-                if valid_phone is str:
-                    print(valid_phone)
-                else:
-                    raise ValueError
-        except ValueError:
-            print("The input caused an unexpected error, please try again")
-    
+                print("The phone number input does not meet the format of ###-###-####. Please try again.")
     return phone
 
 def get_contact_email():
-    pass
+    while True:
+        email = input("What is the contact's email address?: ").strip()
+        valid_email = validate_email(email)
+        if valid_email:
+            break
+    return email
 
 def get_contact_additional():
-    pass
+    try:
+        additional = input("Please input any additional information for this contact: ").strip()
+    except Exception:
+        print("unexpected error while obtaining additional notes for contact")
+    else:
+        return additional
+
 list_of_contacts = {}
 # {'unique ID': {'name': '', 'phone': '', 'email': '', "additional": ''}, ...}
 
 while True:
-    print('''Welcome to the Contact Management System! 
+    print('''\nWelcome to the Contact Management System! 
 Menu:
 1. Add a new contact
 2. Edit an existing contact
