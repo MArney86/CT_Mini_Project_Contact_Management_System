@@ -21,9 +21,11 @@ def add_contact(contact_list):
     else:
         name_space = name.find(' ')
         unique_id = phone[-4:] + name[:name_space]
+        print(unique_id)
 
     if unique_id not in contact_list.keys():
         contact_list[phone] = {'name': name, 'phone': phone, 'email': email, 'additional': additional_info}
+        print(contact_list)
     else:
         print("There's already a contact with that unique identifier")
     
@@ -37,7 +39,9 @@ def search_contacts(contact_list):
     pass
 
 def display_all(contact_list):
-    pass
+    for unique_id, contact in contact_list.items():
+        output = unique_id + ": \n\tName: " + contact["name"] + "\n\tPhone Number: " + contact["phone"] + "\n\tEmail Address: " + contact["email"] + "\n\tAdditional Notes: " + contact["additional"]
+        print(output)
 
 def export_contacts(contact_list):
     pass
