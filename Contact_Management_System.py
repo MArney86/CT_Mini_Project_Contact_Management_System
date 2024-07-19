@@ -105,10 +105,21 @@ def locate_contact(contact_list, search_value):
 
 def delete_contact(contact_list):
     display_all(contact_list)
-    user_choice = input("\nPlease input the unique id of the contact you wish to edit: ")
     uid_validation = r'[0-9]{4}+[a-zA-Z'-]{2,}'
-    if re.match(uid_validation, user_choice):
-        pass
+    while True:
+        user_choice = input("\nPlease input the unique id of the contact you wish to edit: ").strip()
+        try:
+            if re.match(uid_validation, user_choice):
+                contact_list.pop(user_choice)
+                print("The contact with UniqueID '{user_choice}' was deleted")
+                break
+            else
+                print("That UniqueID was not valid, please try again")
+        except KeyError:
+            print("Sorry there does not exist a contact with that UniqueID.")
+        except Exception:
+            print("An unknown Error Occurred")
+        
 
 def search_contacts(contact_list):
     while True:
