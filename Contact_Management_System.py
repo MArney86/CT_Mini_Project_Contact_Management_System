@@ -1,4 +1,5 @@
 import re
+import sys
 
 def add_contact(contact_list):
     name = get_contact_name()    
@@ -218,11 +219,36 @@ def display_all(contact_list):
         print(output)
 
 def export_contacts(contact_list):
-    pass
+    file_name = input("\nWhat is the name of the file you wish to save your contacts in?: ")
+    with open(file_name, 'w') as output_file:
+        for uid, content in contact_list.items():
+        output_file.write(f"UID:{uid}")
+        for key, value in content.items():
+            output_file.write("{key}:{value}")
+        output_file.write('')
 
 def import_contacts(contact_list):
-    pass
-
+    file_name = input("\nWhat is the name of the file you wish to load contacts from?: ")
+    contact_set = set(contact_list)
+    with open(file_name, 'r') as input_file:
+        counter = 0
+        lines = input_file.readline()
+        for counter in range(lines.len()):
+            if not line.isspace():
+                key, value = line.split(":")
+                if key = 'UID':
+                    contact_internal = {}
+                    for x in range(1,5):
+                        contact_key, contact_value = lines[counter+x].split()
+                        contact_internal[contact_key] = contact_value.strip()
+                    counter += 4
+                    if value not in contact_list.keys():
+                        contact_list[value] = contact_internal
+                        print(f'Contact "{value}" has been added')
+                    else:
+                        print(f'Contact {value} already exists in your contacts, skipping.')
+                counter += 1
+        
 def validate_email(email):
     validation = r'^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}$'
     if re.match(validation, email):
@@ -343,7 +369,7 @@ Menu:
         elif choice == '7':
             import_contacts(list_of_contacts)
         elif choice == '8':
-            break
+            sys.exit("Goodbye!!!")
         else:
             print("That was not a valid choice. Please try again.")
 
