@@ -18,25 +18,188 @@ def add_contact(contact_list):
     
     if name.find(' ') == -1:
         unique_id = phone[-4:] + name
+        print(unique_id)
     else:
         name_space = name.find(' ')
         unique_id = phone[-4:] + name[:name_space]
         print(unique_id)
 
     if unique_id not in contact_list.keys():
-        contact_list[phone] = {'name': name, 'phone': phone, 'email': email, 'additional': additional_info}
+        contact_list[unique_id] = {'name': name, 'phone': phone, 'email': email, 'additional': additional_info}
         print(contact_list)
     else:
         print("There's already a contact with that unique identifier")
     
 def edit_contact(contact_list):
-    pass
+    display_all(contact_list)
+    user_choice = input("\nPlease input the unique id of the contact you wish to edit: ")
+    uid_validation = r'[0-9]{4}+[a-zA-Z'-]{2,}'
+    if re.match(uid_validation, user_choice):
+        print('\nSelections for editing:\n1. Contact Name\n2. Contact Phone Number\n3. Contact Email Address\n4. Additional Information\n5. Return to Main Menu')
+        choice = input("What would you like to edit?: ")
+        while True:
+            if choice == '1':
+                while True:
+                    new_name = input("What would you like to change the contact name to?")
+                    if validate_name(new_name):
+                        contact_list[user_choice]['name'] = new_phone
+                        print(f"Name for contact {user_choice} is now :{contact_list[user_choice]['name']}")
+                        break
+                    else:
+                        print("That was not a valid Name. Please try again")
+                
+            elif choice == '2':
+                while True:
+                    new_phone = input("What would you like to change the email address to?")
+                    if validate_phone(new_phone):
+                        contact_list[user_choice]['phone'] = new_phone
+                        print(f"Phone Number for contact {user_choice} is now :{contact_list[user_choice]['phone']}")
+                        break
+                    else:
+                        print("That was not a valid Phone Number. Please try again")
+                
+            elif choice == '3':
+                while True:
+                    new_email = input("What would you like to change the email address to?")
+                    if validate_email(new_email):
+                        contact_list[user_choice]['email'] = new_email
+                        print(f"Email address for contact {user_choice} is now :{contact_list[user_choice]['email']}")
+                        break
+                    else:
+                        print("Please try again")
+
+            elif choice == '4':
+                print(f"Current additional info for contact: \n{contact_list[user_choice]['additional']}")
+                while True:
+                    print('')
+                    choice = input("Would you like to \n1. Add to current info\n2. Replace current info\n? :")
+                    if choice == '1':
+                        new_add = input("What would you like to add to the additional information: ")
+                        contact_list[user_choice]['additional'] = contact_list[user_choice]['additional'] + ' ' + new_add
+                        break
+                    elif choice == '2':
+                        contact_list[user_choice]['additional'] = input("What would you like to replace the current info with?\n: ")
+                        break
+                    else:
+                        print("Not a valid selection: Please try again.")
+                print(f"New additional info for contact {user_choice}:\n{contact_list[user_choice]['additional']}")        
+
+            elif choice == '5':
+                main(contact_list)
+                break
+
+            else:
+                print("That was not a valid selection. Please try again.")
+
+
+def locate_contact(contact_list, search_value):
+    found = False
+    found_contacts = []
+    for unique_id, contact in contact_list.items():
+        if search_value in contact.values():
+            found_contacts.append(unique_id)
+            found = True
+        else:
+            continue
+    return (found, found_contacts)
 
 def delete_contact(contact_list):
-    pass
+    display_all(contact_list)
+    user_choice = input("\nPlease input the unique id of the contact you wish to edit: ")
+    uid_validation = r'[0-9]{4}+[a-zA-Z'-]{2,}'
+    if re.match(uid_validation, user_choice):
+        pass
 
 def search_contacts(contact_list):
-    pass
+    while True:
+        search_criteria = input("\nSearch criteria:\n1. By Name\n2. By Phone Number\n3. By email\n4.By Additional Information\n5.Return To Main Menu\nWhich criteria would you like to search by?: ")
+        
+        if search_criteria == '1':
+            search_name = input("What name would you like to search for?: ")
+            if validate_name(search_name):
+                found, located_contacts = locate_contact(contact_list, search_name)
+                if found:
+                    print("Contacts found with that name:")
+                    found_name = False
+                    for uid in located_contacts:
+                        if contact_list[uid]['name'] == search_name:
+                            found_name = True
+                            display_contact(contact_list, uid)
+                        else:
+                            continue
+                    if not found_name:
+                        print("There were no contacts with that name listed as contact name")
+                else:
+                    print("There were no contacts with that name found")
+            else:
+                print("That was not a valid name for searching")
+            break
+
+        if search_criteria == '2':
+            search_phone = input("What phone number would you like to search for?: ")
+            if validate_phone(search_phone):
+                found, located_contacts = locate_contact(contact_list, search_phone)
+                if found:
+                    print("Contacts found with that phone number:")
+                    found_phone = False
+                    for uid in located_contacts:
+                        if contact_list[uid]['phone'] == search_phone:
+                            found_phone = True
+                            display_contact(contact_list, uid)
+                        else:
+                            continue
+                    if not found_phone:
+                        print("There were no contacts with that phone number listed as contact phone number")
+                else:
+                    print("There were no contacts with that phone number found")
+            else:
+                print("That was not a valid phone number for searching")
+            break
+
+        if search_criteria == '3':
+            search_email = input("What email address would you like to search for?: ")
+            if validate_name(search_email):
+                found, located_contacts = locate_contact(contact_list, search_email)
+                if found:
+                    print("Contacts found with that email address:")
+                    found_email = False
+                    for uid in located_contacts:
+                        if contact_list[uid]['name'] == search_email:
+                            found_email = True
+                            display_contact(contact_list, uid)
+                        else:
+                            continue
+                    if not found_name:
+                        print("There were no contacts with that email address listed as contact email address")
+                else:
+                    print("There were no contacts with that email address found")
+            else:
+                print("That was not a valid email address for searching")
+            break
+
+        if search_criteria == '4':
+            search_additional = input("Please input the string you'd like to search for in the additional info of the contact you're looking for:\n ")
+            search_rgx = rf'\b{re.escape(search_additional)}'
+            for uid, content in contact_list.items
+                found_add = False
+                if re.match(search_rgx, contact_list[uid]['additional'], re.IGNORECASE):
+                    found_add = True
+                    display_contact(contact_list, uid)
+                else:
+                    continue
+            if not found:
+                print(f'There were no contacts with "{search_additional}" in their Additional Information')
+            break
+
+        if search_criteria == '5':
+            main(contact_list)
+            break
+            
+
+
+def display_contact(contact_list, unique_id)
+    print(unique_id + ": \n\tName: " + contact_list[unique_id]["name"] + "\n\tPhone Number: " + contact_list[unique_id]["phone"] + "\n\tEmail Address: " + contact_list[unique_id]["email"] + "\n\tAdditional Notes: " + contact_list[unique_id]["additional"])
+
 
 def display_all(contact_list):
     for unique_id, contact in contact_list.items():
@@ -83,7 +246,7 @@ def validate_email(email):
 
 def validate_name(name):
     try:
-        valid_name = r"[a-zA-Z]{2,}"
+        valid_name = r"[a-zA-Z'-]{2,}"
         valid_fullname = r"[a-zA-Z'-]{2,}+\s+[a-zA-Z'-]{2,}"
         if re.match(valid_name, name) or re.match(valid_fullname, name):
             return True
@@ -140,11 +303,9 @@ def get_contact_additional():
     else:
         return additional
 
-list_of_contacts = {}
-# {'unique ID': {'name': '', 'phone': '', 'email': '', "additional": ''}, ...}
-
-while True:
-    print('''\nWelcome to the Contact Management System! 
+def main(list_of_contacts):
+    while True:
+        print('''\nWelcome to the Contact Management System! 
 Menu:
 1. Add a new contact
 2. Edit an existing contact
@@ -154,23 +315,28 @@ Menu:
 6. Export contacts to a text file
 7. Import contacts from a text file *BONUS*
 8. Quit''')
-    choice = input("What would you like to do with your contacts?: ")
+        choice = input("What would you like to do with your contacts?: ")
 
-    if choice == '1':
-        add_contact(list_of_contacts)
-    elif choice == '2':
-        edit_contact(list_of_contacts)
-    elif choice == '3':
-        delete_contact(list_of_contacts)
-    elif choice == '4':
-        search_contacts(list_of_contacts)
-    elif choice == '5':
-        display_all(list_of_contacts)
-    elif choice == '6':
-        export_contacts(list_of_contacts)
-    elif choice == '7':
-        import_contacts(list_of_contacts)
-    elif choice == '8':
-        break
-    else:
-        print("That was not a valid choice. Please try again.")
+        if choice == '1':
+            add_contact(list_of_contacts)
+        elif choice == '2':
+            edit_contact(list_of_contacts)
+        elif choice == '3':
+            delete_contact(list_of_contacts)
+        elif choice == '4':
+            search_contacts(list_of_contacts)
+        elif choice == '5':
+            display_all(list_of_contacts)
+        elif choice == '6':
+            export_contacts(list_of_contacts)
+        elif choice == '7':
+            import_contacts(list_of_contacts)
+        elif choice == '8':
+            break
+        else:
+            print("That was not a valid choice. Please try again.")
+
+list_of_contacts = {}
+# {'unique ID': {'name': '', 'phone': '', 'email': '', 'additional': ''}, ...}
+
+main(list_of_contacts)
