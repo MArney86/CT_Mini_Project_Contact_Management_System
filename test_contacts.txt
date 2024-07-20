@@ -1,0 +1,29 @@
+UID:6667Jeremy
+name:Jeremy
+phone:936-666-6667
+email:example1@email.com
+additional:
+
+UID:9999Sarah
+name:Sarah Samson
+phone:999-999-9999
+email:example2@email.com
+additional:1234 any street, anytown, state 00000
+
+UID:7777Jake
+name:Jake Jones
+phone:777-777-7777
+email:example3@email.com
+additional:Blue Mercedes
+
+UID:4445Susan
+name:Susan
+phone:444-444-4445
+email:example4@email.com
+additional:Awesome smile
+
+UID:7676Kimmy
+name:Kimmy Wang
+phone:989-787-7676
+email:example5@email.com
+additional:
